@@ -11,19 +11,8 @@ app.listen(http_port, () => {
 app.get('/', (req, res) => res.json({"message":"Ok"}));
 
 // List all users
-app.get('/api/users', (req, res) => {
-    let sql = 'select * from users';
-    let params = [];
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-            res.status(404).json({'error':err.message});
-            return;
-        }
-        res.json({
-            'message': 'success',
-            'data': rows
-        });
-    });
+app.get('/api/users', (req, resp) => {
+    let sql = 'select * from users'
 });
 
 app.use((req, res) => {

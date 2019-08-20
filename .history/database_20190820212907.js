@@ -1,8 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const md5 = require('md5');
-const DBSOURCE = "db.sqlite";
 
-const db = new sqlite3.Database(DBSOURCE, (err) => {
+const db = new sqlite3.Database(db.sqlite, (err) => {
     if (err) {
         console.error(err.message);
         throw err;
@@ -27,7 +26,7 @@ const createTables = () => {
                 console.log('Table users already exist!');
             } else {
                 console.log('Table users created, creating some rows.....');
-                let insert = 'INSERT INTO users (name, phone, email, password) VALUES (?,?,?,?)';
+                let insert = 'INSERT INTO users (name, phone, email, password) VALUES (?,?,?)';
                 db.run(insert, ["admin", "08065342345", "admin@test.com", md5(adminpass)]);
                 db.run(insert, ["user1", "07086283471", "user1@test.com", md5(user1pass)]);
             }
@@ -53,12 +52,10 @@ const createTables = () => {
                 console.log('Table contacts already exist!');
             } else {
                 console.log('Table contacts created, creating some rows.....');
-                let insert = 'INSERT INTO contacts (name, phone, email, address, company, occupation, relationship) VALUES (?,?,?,?,?,?,?)';
-                db.run(insert, ["John Doe", "08065342345", "johndoe@test.com", "Lagos, Nigeria", "Huawei", "RNO", "Friends"]);
-                db.run(insert, ["James Arthur", "07086283471", "jamesarthur@test.com", "Lagos, Nigeria", "Frotech", "Software Developer", "Family"]);
+                let insert = 'INSERT INTO contacts (firstName, lastName, workInfo, mobilePhone, workPhone, address, email, photo) VALUES (?,?,?,?,?,?,?,?)';
+                db.run(insert, ["admin", "08065342345", "admin@test.com", md5(adminpass)]);
+                db.run(insert, ["user1", "07086283471", "user1@test.com", md5(user1pass)]);
             }
         } 
         );
 }
-
-// module.exports = db;

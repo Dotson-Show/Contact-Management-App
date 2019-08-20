@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
-const md5 = require('md5');
+import md5 from 'md5';
 const DBSOURCE = "db.sqlite";
 
 const db = new sqlite3.Database(DBSOURCE, (err) => {
@@ -61,4 +61,4 @@ const createTables = () => {
         );
 }
 
-// module.exports = db;
+module.exports = db;

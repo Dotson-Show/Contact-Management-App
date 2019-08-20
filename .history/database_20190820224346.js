@@ -1,8 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
-const md5 = require('md5');
-const DBSOURCE = "db.sqlite";
+import md5 from 'md5';
 
-const db = new sqlite3.Database(DBSOURCE, (err) => {
+const db = new sqlite3.Database(db.sqlite, (err) => {
     if (err) {
         console.error(err.message);
         throw err;
@@ -61,4 +60,4 @@ const createTables = () => {
         );
 }
 
-// module.exports = db;
+export default db;

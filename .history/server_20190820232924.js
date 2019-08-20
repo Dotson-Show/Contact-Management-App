@@ -13,16 +13,11 @@ app.get('/', (req, res) => res.json({"message":"Ok"}));
 // List all users
 app.get('/api/users', (req, res) => {
     let sql = 'select * from users';
-    let params = [];
+    let param = [];
     db.all(sql, params, (err, rows) => {
         if (err) {
-            res.status(404).json({'error':err.message});
-            return;
+            res.status(404).json({'error':err.message})
         }
-        res.json({
-            'message': 'success',
-            'data': rows
-        });
     });
 });
 
