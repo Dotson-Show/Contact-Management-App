@@ -1,20 +1,25 @@
 const express = require('express');
-const app = express();
-const db = require('./database.js');
-
+const db = require('./models/database.js');
+const path = require('path');
+const session = require('express-session');
 const md5 = require('md5');
-
 const bodyParser = require('body-parser');
+
+const app = express();
+
+app.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static('./views/'));
 
 const http_port = 3000;
 
-app.listen(http_port, () => {
-    console.log(`Server running on port ${http_port}`);
-});
 
-app.get('/', (req, res) => res.json({"message":"Ok"}));
+
+app.get('/', (req, res) => {
+    //res.json({"message":"Ok"})
+    // res.sendFile(path.join(__dirname + '/views/index.html'));
+});
 
 // List all users
 app.get('/api/users', (req, res) => {
@@ -207,4 +212,8 @@ app.delete("/api/contact/:id", (req, res) => {
 
 app.use((req, res) => {
     res.status(404);
+});
+
+app.listen(http_port, () => {
+    console.log(`Server running on port ${http_port}`);
 });

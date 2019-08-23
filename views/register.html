@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>My Contact</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/Google-Style-Login.css">
+</head>
+
+<body>
+    <div class="login-card">
+        <div class="text-center">
+            <div id="reprt" class="alert-primary" role="alert">
+                
+            </div>
+            <h2 style="color: rgb(12,103,187);">Register</h2>
+        </div><img class="profile-img-card" src="assets/img/avatar_2x.png">
+        <p class="profile-name-card"> </p>
+        <form class="form-signin" method="POST" enctype="multipart/form-data">
+            <span class="reauth-email"> </span>
+            <input class="form-control" type="text" id="inputName" name="name" value="" required="" placeholder="Full Name" autofocus="">
+            <input class="form-control" type="phone" id="inputPhone" name="phone" value="" required="" placeholder="Mobile Phone" autofocus="">
+            <input class="form-control" type="email" id="inputEmail" name="email" value="" required="" placeholder="Email address">
+            <input class="form-control" type="password" id="inputPassword" name="password" value="" required="" placeholder="Password">
+            <div class="checkbox">
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Remember me</label></div>
+            </div>
+    <button class="btn btn-primary btn-block btn-lg btn-signin" type="submit" value="submit">Submit</button>
+</form>
+    <div>
+        Already registered? <a href="/index.html">Login Here</a>
+    </div>
+</div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(() => {
+            
+            $('form').submit((e) => {
+                let formData = {
+                    'name': $('#inputName').val(),
+                    'phone': $('#inputPhone').val(),
+                    'email': $('#inputEmail').val(),
+                    'password': $('#inputPassword').val()
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: 'api/user',
+                    data: formData,
+                    dataType: 'json',
+                    encode: true
+                })
+                    .done((result) => {
+                        let rep = document.querySelector('#reprt');
+                        const {data} = result;
+                        console.log(data);
+                        rep.classList.add('alert');
+                        rep.textContent = `Account ${data.email} created successfuly`;
+                        // let inputs = document.querySelectorAll('input');
+                        // inputs.forEach(input => {
+                        //     input.val() = ''
+                        // });
+                    }) 
+                e.preventDefault();
+            });
+
+        });
+    </script>
+</body>
+
+</html>
