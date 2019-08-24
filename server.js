@@ -160,7 +160,7 @@ app.post("/api/contact/", (req, res) => {
     });
 })
 
-// Update a user
+// Update a contact
 app.patch("/api/contact/:id", (req, res) => {
     let data = {
         name: req.body.name,
