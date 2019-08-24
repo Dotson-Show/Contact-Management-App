@@ -163,10 +163,24 @@ $(() => {
       
       // ---- Display all contacts ---- 
       data.forEach(result => {
+        let {name, relationship} = result;
         $('.table').append(contact(result));
         allContact.push(name);
+        
+          if (relationship.toLowerCase() == 'family') {
+            family.push(name);
+          }
+
+          if (relationship.toLowerCase() == 'friends') {
+            friends.push(name);
+          }
+
+          if (relationship.toLowerCase() == 'others') {
+            others.push(name);
+          }
+
       })
-      console.log(allContact.length);
+      
       
       // ---- Display Groups ----
       $('#family').click((e) => {
@@ -177,7 +191,6 @@ $(() => {
           let {name, relationship} = result;
           if (relationship.toLowerCase() == 'family') {
             $('.table').append(contact(result));
-            family.push(name);
           }
         })
         if (family.length == 0 ) {
@@ -187,7 +200,9 @@ $(() => {
           $('[data-contact-report]').removeClass('alert');
           document.querySelector('[data-contact-report]').textContent = '';
         }
+        
       });
+      
 
       $('#friends').click((e) => {
         e.preventDefault();
@@ -197,7 +212,6 @@ $(() => {
           let {relationship} = result;
           if (relationship.toLowerCase() == 'friends') {
             $('.table').append(contact(result));
-            friends.push(name);
           }
         })
         if (friends.length == 0 ) {
@@ -217,7 +231,6 @@ $(() => {
           let {relationship} = result;
           if (relationship.toLowerCase() == 'others') {
             $('.table').append(contact(result));
-            others.push(name);
           }
         })
         if (others.length == 0 ) {
@@ -228,6 +241,12 @@ $(() => {
           document.querySelector('[data-contact-report]').textContent = '';
         }
       });
+
+      // Displaying the group quntities
+      $('[data-allContact-badge]').text(allContact.length);
+      $('[data-family-badge]').text(family.length);
+      $('[data-friends-badge]').text(friends.length);
+      $('[data-others-badge]').text(others.length);
 
       // Request to delete a contact
       $('#del').click((e) => {
