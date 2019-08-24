@@ -51,101 +51,20 @@
         <div class="col-md-3">
           <div class="list-group">
             <a href="dashboard.html" class="list-group-item active">All Contact <span class="badge">10</span></a>
-            <a href="" class="list-group-item">Family <span class="badge">4</span></a>
-            <a href="" class="list-group-item">Friends <span class="badge">3</span></a>
-            <a href="" class="list-group-item">Other <span class="badge">3</span></a>
+            <a href="" id="family" class="list-group-item">Family <span class="badge">4</span></a>
+            <a href="" id="friends" class="list-group-item">Friends <span class="badge">3</span></a>
+            <a href="" id="others" class="list-group-item">Other <span class="badge">3</span></a>
           </div>
         </div><!-- /.col-md-3 -->
 
         <div class="col-md-9">
           <div class="panel panel-default">
             <table class="table">
+              <div data-contact-report class="alert-primary"></div>
               <tr>
-                <td class="middle">
-                  <div class="media">
-                    <div class="media-left">
-                      <a href="#">
-                        <img class="media-object" src="http://placehold.it/100x100" alt="...">
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h4 class="media-heading">Contact 1</h4>
-                      <address>
-                        <strong>Job</strong><br>
-                        contact1@sample.com
-                      </address>
-                    </div>
-                  </div>
-                </td>
-                <td width="150" class="middle">
-                    <div>
-                      <a href="contactdetails.html" class="btn btn-circle btn-primary btn-xs" title="Details">
-                        <i class="glyphicon glyphicon-zoom-out"></i>
-                      </a>
-                      <a href="editcontact.html" class="btn btn-circle btn-default btn-xs" title="Edit">
-                        <i class="glyphicon glyphicon-edit"></i>
-                      </a>
-                      <a href="#" class="btn btn-circle btn-danger btn-xs" title="Delete">
-                        <i class="glyphicon glyphicon-remove"></i>
-                      </a>
-                    </div>
-                  </td>
-                </td>
               </tr>
-              <tr>
-                <td class="middle">
-                  <div class="media">
-                    <div class="media-left">
-                      <a href="#">
-                        <img class="media-object" src="http://placehold.it/100x100" alt="...">
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h4 class="media-heading">Contact 2</h4>
-                      <address>
-                        <strong>Job 2</strong><br>
-                        contact2@sample.com
-                      </address>
-                    </div>
-                  </div>
-                </td>
-                <td width="150" class="middle">
-                  <div>
-                    <a href="contactdetails.html" class="btn btn-circle btn-primary btn-xs" title="Details">
-                      <i class="glyphicon glyphicon-zoom-out"></i>
-                    </a>
-                    <a href="editcontact.html" class="btn btn-circle btn-default btn-xs" title="Edit">
-                      <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                    <a href="#" class="btn btn-circle btn-danger btn-xs" title="Delete">
-                      <i class="glyphicon glyphicon-remove"></i>
-                    </a>
-                  </div>
-                </td>
-              </tr>
+              <!-- table to append contact -->
             </table>            
-          </div>
-
-          <div class="text-center">
-            <nav>
-              <ul class="pagination">
-                <li>
-                  <a href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>
-                <li class="active"><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li>
-                  <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
           </div>
         </div>
       </div>
@@ -155,5 +74,6 @@
     <script src="assets/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/dashboard.js"></script>
   </body>
 </html>
