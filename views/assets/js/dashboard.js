@@ -1,12 +1,170 @@
 $(() => {
   // Define SPA routes
+  const dEditContact = (result) => {
+    // let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = result;
+    // let contactPic = '';
+    // photo? contactPic = photo : contactPic = 'http://placehold.it/100x100';
+
+    return `<div class="panel-heading">
+    <strong>Edit Contact</strong>
+  </div>           
+  <div class="panel-body">
+    <div class="form-horizontal">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="name" class="control-label col-md-3">Name</label>
+            <div class="col-md-8">
+              <input type="text" name="name" id="name" class="form-control">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="phone" class="control-label col-md-3">Phone</label>
+            <div class="col-md-8">
+              <input type="text" name="phone" id="phone" class="form-control">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="email" class="control-label col-md-3">Email</label>
+            <div class="col-md-8">
+              <input type="text" name="email" id="email" class="form-control">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="name" class="control-label col-md-3">Address</label>
+            <div class="col-md-8">
+              <textarea name="address" id="address" rows="3" class="form-control"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="company" class="control-label col-md-3">Company</label>
+            <div class="col-md-8">
+              <input type="text" name="company" id="company" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+              <label for="occupation" class="control-label col-md-3">Occupation</label>
+              <div class="col-md-8">
+                <input type="text" name="occupation" id="occupation" class="form-control">
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label for="relationship" class="control-label col-md-3">Relationship</label>
+              <div class="col-md-5">
+                <select name="relationship" id="relationship" class="form-control">
+                  <option value="">Select group</option>
+                  <option value="1">Family</option>
+                  <option value="2">Friend</option>
+                  <option value="3">Other</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <a href="#" id="add-group-btn" class="btn btn-default btn-block">Add Group</a>
+              </div>
+            </div>
+          <div class="form-group" id="add-new-group">
+            <div class="col-md-offset-3 col-md-8">
+              <div class="input-group">
+                <input type="text" name="new_group" id="new_group" class="form-control">
+                <span class="input-group-btn">
+                  <a href="#" class="btn btn-default">
+                    <i class="glyphicon glyphicon-ok"></i>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="fileinput fileinput-new" data-provides="fileinput">
+            <div class="fileinput-new thumbnail" style="width: 150px; height: 150px;">
+              <img src="http://placehold.it/150x150" alt="Photo">
+            </div>
+            <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+            <div class="text-center">
+              <span class="btn btn-default btn-file"><span class="fileinput-new">Choose Photo</span><span class="fileinput-exists">Change</span><input type="file" name="photo"></span>
+              <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-offset-3 col-md-6">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="#" class="btn btn-default">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  }
+
+  const dFullDetails = (result) => {
+    let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = result;
+    let contactPic = '';
+    photo? contactPic = photo : contactPic = 'http://placehold.it/100x100';
+    
+    return `<table class="table">
+    <tr>
+      <td class="middle">
+        <div class="media">
+          <div class="media-left">
+            <a href="#">
+              <img class="media-object" src="${contactPic}" alt="...">
+            </a>
+          </div>
+          <div class="media-body">
+            
+            <address>
+              <ul>
+                  <ul class="list-group">
+                      <li class="list-group-item active"><h4 class="media-heading">${name}</h4></li>
+                      <li class="list-group-item">${phone}</li>
+                      <li class="list-group-item">${email}</li>
+                      <li class="list-group-item">${address}</li>
+                      <li class="list-group-item">${company}</li>
+                      <li class="list-group-item">${occupation}</li>
+                      <li class="list-group-item">${relationship}</li>
+                  </ul>
+              </ul> 
+            </address>
+          </div>
+        </div>
+      </td>
+      <td width="150" class="middle">
+          <div>
+            <a href="editcontact.html" class="btn btn-circle btn-default btn-xs" title="Edit">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a href="#" class="btn btn-circle btn-danger btn-xs" title="Delete">
+              <i class="glyphicon glyphicon-remove"></i>
+            </a>
+          </div>
+        </td>
+      </td>
+    </tr>
+  </table>`;
+  }
+
   const contListTab = `<table class="table">
   <div data-contact-report class="alert-primary"></div>
   <tr>
   </tr>
   <!-- table to append contact -->
 </table>`;
-  const addContact = `<div class="panel-heading">
+  
+const addContact = `<div class="panel-heading">
   <strong>Add Contact</strong>
 </div>           
 <div class="panel-body">
@@ -113,17 +271,31 @@ $(() => {
 </div>`;
 
 // Define functions, Arrays, and variables
-
   const contact = (result) => {
     let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = result;
     let contactPic = '';
     photo? contactPic = photo : contactPic = 'http://placehold.it/100x100';
-      
+    
+    function fullDetailFunc(id) {
+      // $('#dContainer').html(fullDetails);
+      console.log(`Display full detail of contact with id: ${id}`);
+    } 
+    
+    function editFunc(id) {
+      // $('#dContainer').html(fullDetails);
+      console.log(`Edit Contact with id: ${id}`);
+    }
+
+    function deleteFunc(id) {
+      // $('#dContainer').html(fullDetails);
+      console.log(`Ready to delete contact with id: ${id}`)
+    }
+
     return `<tr>
             <td class="middle">
               <div class="media">
                 <div class="media-left">
-                   
+                  
                       <img class="media-object" src="${contactPic}" alt="...">
                     
                   </div>
@@ -139,13 +311,13 @@ $(() => {
               </td>
               <td width="150" class="middle">
                 <div>
-                  <a href="contactdetails.html" class="btn btn-circle btn-primary btn-xs" title="More Details">
+                  <a onclick="const getFullDetails = ${fullDetailFunc}(${contact_id})" id="details" class="btn btn-circle btn-primary btn-xs" title="More Details">
                     <i class="glyphicon glyphicon-zoom-out"></i>
                   </a>
-                  <a href="editcontact.html" class="btn btn-circle btn-default btn-xs" title="Edit">
+                  <a onclick="const editContact = ${editFunc}(${contact_id})" id="edit" class="btn btn-circle btn-default btn-xs" title="Edit">
                     <i class="glyphicon glyphicon-edit"></i>
                   </a>
-                  <a href="#" id="del" class="btn btn-circle btn-danger btn-xs" title="Delete">
+                  <a onclick="const deleteContact = ${deleteFunc}(${contact_id})" id="del" class="btn btn-circle btn-danger btn-xs" title="Delete">
                     <i class="glyphicon glyphicon-remove"></i>
                   </a>
                 </div>
@@ -157,7 +329,14 @@ $(() => {
     const allContact = [];
     const friends = [];
     const others = [];
-    
+
+    const addContactRoute = () => {
+      $('#addCont').click((e) => {
+        e.preventDefault();
+        $('#dContainer').html(addContact);
+      });
+    }
+
     // ---- call get on the api and do DOM works in the Promise callback ----
     $.get('/api/contacts', ({data}) => {
       
@@ -178,7 +357,7 @@ $(() => {
           if (relationship.toLowerCase() == 'others') {
             others.push(name);
           }
-
+         
       })
       
       
@@ -221,6 +400,7 @@ $(() => {
           $('[data-contact-report]').removeClass('alert');
           document.querySelector('[data-contact-report]').textContent = '';
         }
+        
       });
 
       $('#others').click((e) => {
@@ -248,18 +428,8 @@ $(() => {
       $('[data-friends-badge]').text(friends.length);
       $('[data-others-badge]').text(others.length);
 
-      // Request to delete a contact
-      $('#del').click((e) => {
-        e.preventDefault();
-        console.log(data);
-      });
     });
 
-    // Get the addContact route
-    $('#addCont').click((e) => {
-      e.preventDefault();
-      $('#dContainer').html(addContact);
-    });
-    
+    addContactRoute();
     
   });
