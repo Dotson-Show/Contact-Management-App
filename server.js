@@ -206,7 +206,7 @@ app.delete("/api/contact/:id", (req, res) => {
                 res.status(400).json({"error": res.message})
                 return;
             }
-            res.json({"message":"deleted", rows: this.changes})
+            res.json({"message":"Deleted Successfuly", rows: this.changes})
     });
 })
 

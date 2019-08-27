@@ -20,10 +20,6 @@ $(() => {
                 console.log(data);
                 rep.classList.add('alert');
                 rep.textContent = `Account ${data.email} created successfuly`;
-                // let inputs = document.querySelectorAll('input');
-                // inputs.forEach(input => {
-                //     input.val() = ''
-                // });
             }) 
         e.preventDefault();
     });
