@@ -1,4 +1,8 @@
-
+$.get('/getSessId', ({sessId}) => {
+    if (sessId) {
+        location.replace('/dashboard');
+    }
+});
 $(() => {
 
         $('form').submit((e) => {

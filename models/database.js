@@ -8,6 +8,8 @@ const db = new sqlite3.Database('contactDb.sqlite', (err) => {
     }
     else {
         console.log('Connected to SQLite Database.');
+        // console.log('dropping table contacts');
+        // db.run(`DROP TABLE contacts`);
         createTables();
     }
 });
@@ -35,23 +37,30 @@ const createTables = () => {
     db.run(`CREATE TABLE contacts (
         contact_id INTEGER PRIMARY KEY AUTOINCREMENT,
         rel_user_id INTEGER,
-        name text,
-        phone INTEGER, 
-        email text UNIQUE, 
+        name text NOT NULL,
+        phone INTEGER NOT NULL, 
+        email text UNIQUE NOT NULL, 
         address text,
         company text,
         occupation text,
         relationship text,
-        photo text 
+        photo text,
+        FOREIGN KEY (rel_user_id)
+        REFERENCES users (user_id)
+            ON UPDATE SET NULL
+            ON DELETE SET NULL 
         )`,
     (err) => {
         if (err) {
             console.log(`Table contacts not created: ${err.message}`);
         }else{
             console.log('Table contacts created, creating some rows');
-            var insert = 'INSERT INTO contacts (name, phone, email, address, company, occupation, relationship, photo) VALUES (?,?,?,?,?,?,?,?)';
-            db.run(insert, ["John Doe", "08065342345", "johndoe@test.com", "Lagos, Nigeria", "Huawei", "RNO", "Friends"]);
-            db.run(insert, ["James Arthur", "07086283471", "jamesarthur@test.com", "Lagos, Nigeria", "Frotech", "Software Developer", "Family"]);
+            var insert = 'INSERT INTO contacts (rel_user_id, name, phone, email, address, company, occupation, relationship, photo) VALUES (?,?,?,?,?,?,?,?,?)';
+            db.run(insert, ["1", "John Doe", "08065342345", "johndoe@test.com", "Lagos, Nigeria", "Huawei", "RNO", "Friend"]);
+            db.run(insert, ["1", "James Arthur", "07086283471", "jamesarthur@test.com", "Lagos, Nigeria", "Frotech", "Software Developer", "Family"]);
+            db.run(insert, ["1", "James More", "07086284356", "jamesmore@test.com", "Lagos, Nigeria", "Frotech", "Software Developer", "Co-Worker"]);
+            db.run(insert, ["2", "Henry Flow", "07086285566", "henryflow@test.com", "Lagos, Nigeria", "Frotech", "Software Developer", "Co-Worker"]);
+            db.run(insert, ["2", "King James", "07086286710", "kingjames@test.com", "Lagos, Nigeria", "Frotech", "Software Developer", "Co-Worker"]);
         }
     });  
 

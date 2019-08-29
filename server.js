@@ -34,7 +34,7 @@ app.use(session({
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static( './views'));
+// app.use(express.static( './views'));
 app.use(express.static(path.join(__dirname, '/views/')));
 
 // Authentication
@@ -55,10 +55,18 @@ const redirectToDashboard = (req, res, next) => {
     }
 }
 
+
+
 // route to index page (login page)
 app.get('/', redirectToDashboard, (req, res) => {
-    res.sendFile(path.join(__dirname + '/views/index.html'));
-    console.log(req.session)
+    // res.sendFile(path.join(__dirname + '/views/index.html'));
+});
+
+app.get('/getSessId', (req, res) => {
+    const {userId} = req.session;
+    res.json({
+        'sessId': userId
+    })
 });
 
 // route to register page
@@ -115,6 +123,7 @@ app.get('/logout', redirectToLogin, (req, res) => {
             console.log(err.message);
             return
         }
+        res.clearCookie(SESS_NAME);
         return res.redirect('/');    
     })
 });
@@ -182,17 +191,18 @@ app.post("/api/user/", (req, res) => {
         // res.json({
         //     "message": "success",
         //     "data": data,
-        //     "id" : this.lastID
+        //     'sessId': userId
         // })
     });
 })
 
 
 
-// List all contacts
+// List all session user contacts
 app.get('/api/contacts', (req, res) => {
-    let sql = 'select * from contacts';
-    let params = [];
+    const {userId} = req.session;
+    let sql = 'select * from contacts where rel_user_id = ?';
+    let params = [userId];
     db.all(sql, params, (err, rows) => {
         if (err) {
             res.status(400).json({'error':err.message});

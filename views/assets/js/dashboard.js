@@ -1,3 +1,10 @@
+$.get('/getSessId', ({sessId}) => {
+  if (!sessId) {
+      location.replace('/');
+  }
+});
+
+
 // Define SPA routes
 
 const addContact = `<div class="panel-heading">
@@ -56,7 +63,7 @@ const addContact = `<div class="panel-heading">
                 <option value="">Select group</option>
                 <option value="family">Family</option>
                 <option value="friend">Friend</option>
-                <option value="other">Other</option>
+                <option value="co-worker">Co-Worker</option>
               </select>
             </div>
           
@@ -118,7 +125,7 @@ const dFullDetails = (data) => {
                     <strong>Address</stong><li class="list-group-item">${address}</li>
                     <strong>Company</stong><li class="list-group-item">${company}</li>
                     <strong>Occupation</stong><li class="list-group-item">${occupation}</li>
-                    <strong>Group</stong><li class="list-group-item">${relationship}</li>
+                    <strong>Relationship</stong><li class="list-group-item">${relationship}</li>
                 </ul>
             </ul> 
           </address>
@@ -201,7 +208,7 @@ const dEditContact = (data) => {
                 <option value="">Select group</option>
                 <option value="family">Family</option>
                 <option value="friend">Friend</option>
-                <option value="other">Other</option>
+                <option value="co-worker">Co-Worker</option>
               </select>
             </div>
             
@@ -301,7 +308,7 @@ const contListTab = `<table class="table">
     const family = [];
     const allContact = [];
     const friends = [];
-    const others = [];
+    const coWorker = [];
 
     const addContactRoute = () => {
       $('#addCont').click((e) => {
@@ -323,12 +330,12 @@ const contListTab = `<table class="table">
           family.push(name);
         }
 
-        if (relationship.toLowerCase() == 'friends') {
+        if (relationship.toLowerCase() == 'friend') {
           friends.push(name);
         }
 
-        if (relationship.toLowerCase() == 'others') {
-          others.push(name);
+        if (relationship.toLowerCase() == 'co-worker') {
+          coWorker.push(name);
         }
       })
 
@@ -379,7 +386,7 @@ const contListTab = `<table class="table">
         $('tr').remove();
         data.forEach(result => {
           let {relationship} = result;
-          if (relationship.toLowerCase() == 'friends') {
+          if (relationship.toLowerCase() == 'friend') {
             $('.table').append(contact(result));
           }
         })
@@ -399,13 +406,13 @@ const contListTab = `<table class="table">
         $('tr').remove();
         data.forEach(result => {
           let {relationship} = result;
-          if (relationship.toLowerCase() == 'others') {
+          if (relationship.toLowerCase() == 'co-worker') {
             $('.table').append(contact(result));
           }
         })
-        if (others.length == 0 ) {
+        if (coWorker.length == 0 ) {
           $('[data-contact-report]').addClass('alert');
-          document.querySelector('[data-contact-report]').textContent = 'No contacts found in Others';
+          document.querySelector('[data-contact-report]').textContent = 'No contacts found in Co-Workers';
         }else{
           $('[data-contact-report]').removeClass('alert');
           document.querySelector('[data-contact-report]').textContent = '';
@@ -416,7 +423,7 @@ const contListTab = `<table class="table">
       $('[data-allContact-badge]').text(allContact.length);
       $('[data-family-badge]').text(family.length);
       $('[data-friends-badge]').text(friends.length);
-      $('[data-others-badge]').text(others.length);
+      $('[data-others-badge]').text(coWorker.length);
 
     });
 
