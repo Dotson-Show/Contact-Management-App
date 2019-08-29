@@ -49,7 +49,7 @@ const redirectToLogin = (req, res, next) => {
 
 const redirectToDashboard = (req, res, next) => {
     if (req.session.userId) {
-        res.redirect('/');
+        res.redirect('/dashboard');
     } else {
         next();
     }
@@ -74,6 +74,7 @@ app.get('/dashboard', redirectToLogin, (req, res) => {
 // Handles login
 app.post('/api/login', (req, res) => {
     let errors = [];
+    const {userId} = req.session;
     const {email, password} = req.body;
     if (email && password) {
         let sql = 'select * from users where email = ?';
@@ -94,13 +95,13 @@ app.post('/api/login', (req, res) => {
             }
             req.session.userId = row.user_id;
             
-            return res.redirect('/dashboard');
+            // return res.redirect('/dashboard');
             
-            // res.json({
-            //     'message':'success',
-            //     'data':row,
-            //     'sessId': req.session.userId
-            // })
+            res.json({
+                'message':'success',
+                'data':row,
+                'sessId': userId
+            })
         });
     }
     
@@ -114,8 +115,7 @@ app.get('/logout', redirectToLogin, (req, res) => {
             console.log(err.message);
             return
         }
-        res.redirect('/');
-        console.log(req.session)
+        return res.redirect('/');    
     })
 });
 

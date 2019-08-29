@@ -237,7 +237,15 @@ const dEditContact = (data) => {
 </div>`;
 }
 
+const logOutRoute = () => {
+  $('#logOut').click(() => {
+    $.get('/logout');
+  });
+}
+
 $(() => {
+
+  logOutRoute();
 
 const contListTab = `<table class="table">
   <div data-contact-report class="alert-primary"></div>
@@ -302,30 +310,46 @@ const contListTab = `<table class="table">
       });
     }
 
-
-    // ---- call get on the api and do DOM works in the Promise callback ----
     $.get('/api/contacts', ({data}) => {
-      
-      // ---- Display all contacts ---- 
+
+      // ---- Display all contacts on document load ---- 
       data.forEach(result => {
         let {name, relationship} = result;
         $('.table').append(contact(result));
+        
         allContact.push(name);
         
-          if (relationship.toLowerCase() == 'family') {
-            family.push(name);
-          }
+        if (relationship.toLowerCase() == 'family') {
+          family.push(name);
+        }
 
-          if (relationship.toLowerCase() == 'friends') {
-            friends.push(name);
-          }
+        if (relationship.toLowerCase() == 'friends') {
+          friends.push(name);
+        }
 
-          if (relationship.toLowerCase() == 'others') {
-            others.push(name);
-          }
-         
+        if (relationship.toLowerCase() == 'others') {
+          others.push(name);
+        }
       })
+
+      if (allContact.length == 0 ) {
+        $('[data-contact-report]').addClass('alert');
+        document.querySelector('[data-contact-report]').textContent = 'Welcome to My Contact! Please, click the add contact button above to add your contacts.';
+      }else{
+        $('[data-contact-report]').removeClass('alert');
+        document.querySelector('[data-contact-report]').textContent = '';
+      }
       
+      // Display all contacts on clicking all contacts
+      $('#allContact').click((e) => {
+        e.preventDefault();
+        $('#dContainer').html(contListTab);
+        $('tr').remove();
+        data.forEach(result => {
+          let {name, relationship} = result;
+          $('.table').append(contact(result));
+        })
+      });
       
       // ---- Display Groups ----
       $('#family').click((e) => {
