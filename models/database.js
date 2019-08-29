@@ -34,6 +34,7 @@ const createTables = () => {
 
     db.run(`CREATE TABLE contacts (
         contact_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        rel_user_id INTEGER,
         name text,
         phone INTEGER, 
         email text UNIQUE, 

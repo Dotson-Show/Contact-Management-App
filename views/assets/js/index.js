@@ -1,4 +1,33 @@
+const redirectToDashboard = (data, sessId) => {
+    if (sessId) {
+        location.replace("/dashboard.html");
+    }
+}
+
 $(() => {
+    $('form').submit((e) => {
+        let formData = {
+            'email': $('#loginEmail').val(),
+            'password': $('#loginPassword').val()
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/api/login',
+            data: formData,
+            dataType: 'json',
+            encode: true
+        })
+            .done((result) => {
+                let rep = document.querySelector('#reprt');
+                if (result.error) {
+                    rep.classList.add('alert');
+                    rep.textContent = result.error;
+                }
+                // const {data, sessId} = result;
+                // redirectToDashboard(data, sessId);
+            }) 
+        e.preventDefault();
+    });
     // const registerPage = `
     //     <div class="text-center">
     //         <div id="reprt" class="alert-primary" role="alert">
@@ -25,7 +54,11 @@ $(() => {
 
     // $('#register').click((e) => {
     //     e.preventDefault();
-    //     $('[data-form]').html(registerPage);
+    //     $.get('/register', (data) => {
+    //         // $('body').html(data);
+    //         console.log(data)
+    //     });
+    //     // $('[data-form]').html(registerPage);
     // });
 
     // $('#login').click((e) => {

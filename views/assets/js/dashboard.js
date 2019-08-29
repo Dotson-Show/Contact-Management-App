@@ -238,7 +238,7 @@ const dEditContact = (data) => {
 }
 
 $(() => {
-  
+
 const contListTab = `<table class="table">
   <div data-contact-report class="alert-primary"></div>
   <tr>

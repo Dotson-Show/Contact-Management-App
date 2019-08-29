@@ -4,21 +4,119 @@ const path = require('path');
 const session = require('express-session');
 const md5 = require('md5');
 const bodyParser = require('body-parser');
+const SQLiteStore = require('connect-sqlite3')(session);
+
+const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
+
+const {
+    http_port = 3000,
+    NODE_ENV = 'development',
+    SESS_NAME = 'sid',
+    SESS_SECRET = '!secret#piano',
+    SESS_LIFETIME = ONE_WEEK,
+} = process.env
+
+const IN_PROD = NODE_ENV === 'production'
 
 const app = express();
 
-app.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
+app.use(session({
+    name: SESS_NAME,
+    resave: false,
+    saveUninitialized: false,
+    secret: SESS_SECRET,
+    store: new SQLiteStore,
+    cookie: {
+        maxAge: SESS_LIFETIME,
+        sameSite: true,
+        secure: IN_PROD
+    }
+}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static('./views/'));
+app.use(express.static( './views'));
+app.use(express.static(path.join(__dirname, '/views/')));
 
-const http_port = 3000;
+// Authentication
+const redirectToLogin = (req, res, next) => {
+    if (!req.session.userId) {
+        res.redirect('/');
+        // res.send('<pre><h1>Please Login</h1></pre>')
+    } else {
+        next();
+    }
+}
 
+const redirectToDashboard = (req, res, next) => {
+    if (req.session.userId) {
+        res.redirect('/');
+    } else {
+        next();
+    }
+}
 
+// route to index page (login page)
+app.get('/', redirectToDashboard, (req, res) => {
+    res.sendFile(path.join(__dirname + '/views/index.html'));
+    console.log(req.session)
+});
 
-app.get('/', (req, res) => {
-    //res.json({"message":"Ok"})
-    // res.sendFile(path.join(__dirname + '/views/index.html'));
+// route to register page
+app.get('/register', redirectToDashboard, (req, res) => {
+    res.sendFile(path.join(__dirname + '/views/register.html'));
+});
+
+// route to dashboard page
+app.get('/dashboard', redirectToLogin, (req, res) => {
+    res.sendFile(path.join(__dirname + '/views/dashboard.html'));
+});
+
+// Handles login
+app.post('/api/login', (req, res) => {
+    let errors = [];
+    const {email, password} = req.body;
+    if (email && password) {
+        let sql = 'select * from users where email = ?';
+        let params = [email];
+        db.get(sql, params, (err, row) => {
+            if (!row) {
+                res.json({
+                    "error": 'Email or Password Mismatch'
+                })
+                // res.status(400).json({"error":err.message});
+                return;
+            }
+            if (md5(password) != row.password){
+                res.json({
+                    "error": 'Email or Password Mismatch'
+                })
+                return;
+            }
+            req.session.userId = row.user_id;
+            
+            return res.redirect('/dashboard');
+            
+            // res.json({
+            //     'message':'success',
+            //     'data':row,
+            //     'sessId': req.session.userId
+            // })
+        });
+    }
+    
+});
+
+//handles logout
+app.get('/logout', redirectToLogin, (req, res) => {
+    
+    req.session.destroy(function(err) {
+        if (err) {
+            console.log(err.message);
+            return
+        }
+        res.redirect('/');
+        console.log(req.session)
+    })
 });
 
 // List all users
@@ -79,13 +177,17 @@ app.post("/api/user/", (req, res) => {
             res.status(400).json({"error": err.message})
             return;
         }
-        res.json({
-            "message": "success",
-            "data": data,
-            "id" : this.lastID
-        })
+        res.session.userId = this.lastID; 
+        return res.redirect('/dashboard');
+        // res.json({
+        //     "message": "success",
+        //     "data": data,
+        //     "id" : this.lastID
+        // })
     });
 })
+
+
 
 // List all contacts
 app.get('/api/contacts', (req, res) => {
@@ -215,5 +317,5 @@ app.use((req, res) => {
 });
 
 app.listen(http_port, () => {
-    console.log(`Server running on port ${http_port}`);
+    console.log(`Server started at http://localhost:${http_port}`);
 });
