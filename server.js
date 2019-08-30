@@ -233,6 +233,7 @@ app.get('/api/contact/:id', (req, res) => {
 
 // Create New Contact
 app.post("/api/contact/", (req, res) => {
+    const {userId} = req.session;
     let errors=[];
     if (!req.body.name){
         errors.push("No Name specified");
@@ -244,7 +245,7 @@ app.post("/api/contact/", (req, res) => {
         errors.push("No email specified");
     }
     if (errors.length){
-        res.status(400).json({"error":errors.join(",")});
+        res.json({"error": errors.join(",")});
         return;
     }
     const data = {
@@ -257,15 +258,16 @@ app.post("/api/contact/", (req, res) => {
         relationship: req.body.relationship,
         photo: req.body.photo
     }
-    let sql ='INSERT INTO contacts (name, phone, email, address, company, occupation, relationship, photo) VALUES (?,?,?,?,?,?,?,?)'
-    let params =[data.name, data.phone, data.email, data.address, data.company, data.occupation, data.relationship, data.photo]
+    let sql ='INSERT INTO contacts (rel_user_id, name, phone, email, address, company, occupation, relationship, photo) VALUES (?,?,?,?,?,?,?,?,?)'
+    let params =[userId, data.name, data.phone, data.email, data.address, data.company, data.occupation, data.relationship, data.photo]
     db.run(sql, params, function (err, result) {
         if (err){
-            res.status(400).json({"error": err.message})
+            res.json({
+                "error": `The email: ${data.email} already exist` })
             return;
         }
         res.json({
-            "message": "success",
+            "message": `${data.name} successfully saved`,
             "data": data,
             "id" : this.lastID
         })
@@ -298,11 +300,11 @@ app.patch("/api/contact/:id", (req, res) => {
         [data.name, data.phone, data.email, data.address, data.company, data.occupation, data.relationship, data.photo, req.params.id],
         (err, result) => {
             if (err){
-                res.status(400).json({"error": res.message})
+                res.json({"error": 'Error updating this contact'})
                 return;
             }
             res.json({
-                message: "success",
+                message: "Contact updated successfully",
                 data: data
             })
     });

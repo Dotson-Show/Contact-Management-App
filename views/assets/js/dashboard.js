@@ -7,9 +7,19 @@ $.get('/getSessId', ({sessId}) => {
 
 // Define SPA routes
 
-const addContact = `<div class="panel-heading">
+const addContact = () => {
+  
+
+  return `<div class="panel-heading">
+  <a href="" id="logOut" class="btn btn-default">
+    <i class="glyphicon glyphicon-arrow-left"></i> 
+  </a>
   <strong>Add Contact</strong>
-</div>           
+</div>
+<div id="reprt" class="" role="alert">
+                
+</div>
+<form>           
 <div class="panel-body">
   <div class="form-horizontal">
     <div class="row">
@@ -17,21 +27,21 @@ const addContact = `<div class="panel-heading">
         <div class="form-group">
           <label for="name" class="control-label col-md-3">Name</label>
           <div class="col-md-8">
-            <input type="text" name="name" id="name" class="form-control">
+            <input type="text" name="name" id="name" required="" class="form-control">
           </div>
         </div>
         
         <div class="form-group">
           <label for="phone" class="control-label col-md-3">Phone</label>
           <div class="col-md-8">
-            <input type="text" name="phone" id="phone" class="form-control">
+            <input type="phone" name="phone" id="phone" required="" class="form-control">
           </div>
         </div>
         
         <div class="form-group">
           <label for="email" class="control-label col-md-3">Email</label>
           <div class="col-md-8">
-            <input type="text" name="email" id="email" class="form-control">
+            <input type="email" name="email" id="email" required="" class="form-control">
           </div>
         </div>
         
@@ -77,7 +87,7 @@ const addContact = `<div class="panel-heading">
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
           <div class="text-center">
-            <span class="btn btn-default btn-file"><span class="fileinput-new">Choose Photo</span><span class="fileinput-exists">Change</span><input type="file" name="photo"></span>
+            <span class="btn btn-default btn-file"><span class="fileinput-new">Choose Photo</span><span class="fileinput-exists">Change</span><input type="file" name="photo" id="photo"></span>
             <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
           </div>
         </div>
@@ -97,8 +107,10 @@ const addContact = `<div class="panel-heading">
     </div>
   </div>
 </div>
+</form>
 </div>
 </div>`;
+}
 
 const dFullDetails = (data) => {
   let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = data;
@@ -153,8 +165,15 @@ const dEditContact = (data) => {
   photo? contactPic = photo : contactPic = 'http://placehold.it/150x150';
 
   return `<div class="panel-heading">
+  <a href="" id="logOut" class="btn btn-default">
+    <i class="glyphicon glyphicon-arrow-left"></i> 
+  </a>
   <strong>Edit Contact</strong>
-</div>           
+</div>
+<div id="reprt" class="" role="alert">
+                
+</div>
+<form>          
 <div class="panel-body">
   <div class="form-horizontal">
     <div class="row">
@@ -222,7 +241,7 @@ const dEditContact = (data) => {
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
           <div class="text-center">
-            <span class="btn btn-default btn-file"><span class="fileinput-new">Choose Photo</span><span class="fileinput-exists">Change</span><input type="file" name="photo"></span>
+            <span class="btn btn-default btn-file"><span class="fileinput-new">Choose Photo</span><span class="fileinput-exists">Change</span><input type="file" id="photo" name="photo" value=""></span>
             <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
           </div>
         </div>
@@ -241,7 +260,8 @@ const dEditContact = (data) => {
       </div>
     </div>
   </div>
-</div>`;
+</div>
+</form>`;
 }
 
 const logOutRoute = () => {
@@ -282,7 +302,7 @@ const contListTab = `<table class="table">
                   <div class="media-body">
                     <h4 class="media-heading">${name}</h4>
                     <address>
-                      <strong>${occupation}</strong> at <strong><span class="media-heading">${company}</span></strong>
+                      <strong>${occupation}</strong> <strong><span class="media-heading">${company}</span></strong>
                       <div>${phone}</div>
                       <div>${email}</div>
                     </address>
@@ -303,7 +323,7 @@ const contListTab = `<table class="table">
                 </div>
               </td>
             </tr>`;  
-    }
+  }
     
     const family = [];
     const allContact = [];
@@ -314,6 +334,7 @@ const contListTab = `<table class="table">
       $('#addCont').click((e) => {
         e.preventDefault();
         $('#dContainer').html(addContact);
+        addNewContact();
       });
     }
 
@@ -419,7 +440,7 @@ const contListTab = `<table class="table">
         }
       });
 
-      // Displaying the group quntities
+      // Displaying the group quantities
       $('[data-allContact-badge]').text(allContact.length);
       $('[data-family-badge]').text(family.length);
       $('[data-friends-badge]').text(friends.length);
@@ -428,8 +449,8 @@ const contListTab = `<table class="table">
     });
 
     addContactRoute();
-    
-  });
+
+});
 
   function fullDetailFunc(id) {
     $.get(`/api/contact/${id}`, ({data}) => {
@@ -440,12 +461,12 @@ const contListTab = `<table class="table">
   function editFunc(id) {
     $.get(`/api/contact/${id}`, ({data}) => {
       $('#dContainer').html(dEditContact(data));
+      editOldContact(id);
     });
   }
 
   function deleteFunc(id) {
     if(!confirm(`Sure to delete ${id}`)) return;
-    // console.log(`Ready to delete contact with id: ${id}`)
     $.ajax({
       type: 'delete',
       url: `/api/contact/${id}`,
@@ -453,9 +474,77 @@ const contListTab = `<table class="table">
       dataType: 'json'
     })
       .done(({message, rows}) => {
-        // console.log(data);
         alert(`${rows} Rows ${message}`);
         location.reload();
       });
 
+  }
+
+  const addNewContact = () => {
+    
+    $('form').submit((e) => {
+      e.preventDefault();
+      let formData = {
+        'name': $('#name').val(),
+        'phone': $('#phone').val(),
+        'email': $('#email').val(),
+        'address': $('#address').val(),
+        'company': $('#company').val(),
+        'occupation': $('#occupation').val(),
+        'relationship': $('#relationship').val(),
+        'photo': $('#photo').val(),
+      }
+
+      $.post('/api/contact', formData, (result) => {
+        console.log(result)
+        let rep = document.querySelector('#reprt');
+        if (result.error) {
+          rep.classList.add('alert-danger');
+          rep.classList.add('alert');
+          rep.textContent = result.error;
+          return;
+        }
+        console.log(result.message)
+        rep.classList.add('alert-success');
+        rep.classList.add('alert');
+        rep.textContent = result.message;
+      })
+      
+    });
+  }
+
+  const editOldContact = (id) => {
+    
+    $('form').submit((e) => {
+      e.preventDefault();
+      let formData = {
+        'name': $('#name').val(),
+        'phone': $('#phone').val(),
+        'email': $('#email').val(),
+        'address': $('#address').val(),
+        'company': $('#company').val(),
+        'occupation': $('#occupation').val(),
+        'relationship': $('#relationship').val(),
+        'photo': $('#photo').val(),
+      }
+
+      $.ajax({
+        type: 'patch',
+        url: `/api/contact/${id}`,
+        data: formData,
+        dataType: 'json'
+      })
+        .done((result) => {
+          let rep = document.querySelector('#reprt');
+          if (result.error) {
+            rep.classList.add('alert-danger');
+            rep.classList.add('alert');
+            rep.textContent = result.error;
+            return;
+          }
+          rep.classList.add('alert-success');
+          rep.classList.add('alert');
+          rep.textContent = result.message;
+        });
+    });
   }

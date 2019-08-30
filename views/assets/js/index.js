@@ -12,7 +12,6 @@ $(() => {
                 'password': $('#loginPassword').val()
             }
             $.post('/api/login', formData, (result) => {
-                console.log(result)
                 let rep = document.querySelector('#reprt');
                 if (result.error) {
                     rep.classList.add('alert');
