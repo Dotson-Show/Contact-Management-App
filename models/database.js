@@ -44,11 +44,11 @@ const createTables = () => {
         company text,
         occupation text,
         relationship text,
-        photo text,
+        photo BLOB,
         FOREIGN KEY (rel_user_id)
         REFERENCES users (user_id)
-            ON UPDATE SET NULL
-            ON DELETE SET NULL 
+            ON UPDATE RESTRICT
+            ON DELETE CASCADE 
         )`,
     (err) => {
         if (err) {
