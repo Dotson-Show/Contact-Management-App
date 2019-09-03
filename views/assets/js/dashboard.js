@@ -284,17 +284,20 @@ const contListTab = `<table class="table">
 // Define functions, Arrays, and variables
   const contact = (result) => {
     let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = result;
+    let leters = name.split('');
+    let firstLeter = leters[0]
+    console.log(firstLeter)
     let contactPic;
-    photo? contactPic = photo : contactPic = 'http://placehold.it/100x100';  
+    photo? contactPic = photo : contactPic = firstLeter;  
 
     return `<tr>
             <td class="middle">
               <div class="media">
                 <div class="media-left">
-                  
+                  <div class="user-photo">
                       <img class="media-object" src="${contactPic}" alt="...">
-                    
                   </div>
+                </div>
                   <div class="media-body">
                     <h4 class="media-heading">${name}</h4>
                     <address>

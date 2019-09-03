@@ -250,16 +250,21 @@ app.post("/api/contact/", (req, res) => {
         res.json({"error": errors.join(",")});
         return;
     }
-    let imageFile = req.files.photo;
-    let newName = 'uploads/' + Date.now() + '_' + imageFile.name;
-    imageFile.mv('views/'+ newName, (error) => {
-        if (error) {
-            console.log('Problem uploading image');
-            console.log(error.message);
-        } else {
-            console.log('Image uploaded successfully');
-        }
-    })
+
+    let newName;
+
+    if (req.files) {
+        let imageFile = req.files.photo;
+        newName = 'uploads/' + Date.now() + '_' + imageFile.name;
+        imageFile.mv('views/'+ newName, (error) => {
+            if (error) {
+                console.log('Problem uploading image');
+                console.log(error.message);
+            } else {
+                console.log('Image uploaded successfully');
+            }
+        })
+    }
 
     const data = {
         name: req.body.name,
@@ -292,17 +297,20 @@ app.post("/api/contact/", (req, res) => {
 
 // Update a contact
 app.patch("/api/contact/:id", (req, res) => {
-    console.log(`request to update contact number ${req.params.id} received`)
-    let imageFile = req.files.photo;
-    let newName = 'uploads/' + Date.now() + '_' + imageFile.name;
-    imageFile.mv('views/'+ newName, (error) => {
-        if (error) {
-            console.log('Problem uploading image');
-            console.log(error.message);
-        } else {
-            console.log('Image uploaded successfully');
-        }
-    })
+    let newName;
+
+    if (req.files) {
+        let imageFile = req.files.photo;
+        newName = 'uploads/' + Date.now() + '_' + imageFile.name;
+        imageFile.mv('views/'+ newName, (error) => {
+            if (error) {
+                console.log('Problem uploading image');
+                console.log(error.message);
+            } else {
+                console.log('Image uploaded successfully');
+            }
+        })
+    }
 
     const data = {
         name: req.body.name,
