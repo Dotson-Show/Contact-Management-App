@@ -11,7 +11,7 @@ const addContact = () => {
   
 
   return `<div class="panel-heading">
-  <a href="" id="logOut" class="btn btn-default">
+  <a href="" id="" class="btn btn-default">
     <i class="glyphicon glyphicon-arrow-left"></i> 
   </a>
   <strong>Add Contact</strong>
@@ -19,7 +19,7 @@ const addContact = () => {
 <div id="reprt" class="" role="alert">
                 
 </div>
-<form>           
+<form method="POST" enctype="multipart/form-data">           
 <div class="panel-body">
   <div class="form-horizontal">
     <div class="row">
@@ -114,7 +114,7 @@ const addContact = () => {
 
 const dFullDetails = (data) => {
   let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = data;
-  let contactPic = '';
+  let contactPic;
   photo? contactPic = photo : contactPic = 'http://placehold.it/100x100';
   
   return `<table class="table">
@@ -161,11 +161,11 @@ const dFullDetails = (data) => {
 
 const dEditContact = (data) => {
   let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = data;
-  let contactPic = '';
+  let contactPic;
   photo? contactPic = photo : contactPic = 'http://placehold.it/150x150';
 
   return `<div class="panel-heading">
-  <a href="" id="logOut" class="btn btn-default">
+  <a href="" id="" class="btn btn-default">
     <i class="glyphicon glyphicon-arrow-left"></i> 
   </a>
   <strong>Edit Contact</strong>
@@ -173,7 +173,7 @@ const dEditContact = (data) => {
 <div id="reprt" class="" role="alert">
                 
 </div>
-<form>          
+<form method="POST" enctype="multipart/form-data">          
 <div class="panel-body">
   <div class="form-horizontal">
     <div class="row">
@@ -255,7 +255,7 @@ const dEditContact = (data) => {
       <div class="row">
         <div class="col-md-offset-3 col-md-6">
           <button type="submit" class="btn btn-primary">Save</button>
-          <a href="#" class="btn btn-default">Cancel</a>
+          <a href="#" type="reset" class="btn btn-default">Cancel</a>
         </div>
       </div>
     </div>
@@ -281,15 +281,11 @@ const contListTab = `<table class="table">
   <!-- table to append contact -->
 </table>`;
   
-
-
 // Define functions, Arrays, and variables
   const contact = (result) => {
     let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = result;
-    let contactPic = '';
-    photo? contactPic = photo : contactPic = 'http://placehold.it/100x100';
-    
-    
+    let contactPic;
+    photo? contactPic = photo : contactPic = 'http://placehold.it/100x100';  
 
     return `<tr>
             <td class="middle">
@@ -484,32 +480,28 @@ const contListTab = `<table class="table">
     
     $('form').submit((e) => {
       e.preventDefault();
-      let formData = {
-        'name': $('#name').val(),
-        'phone': $('#phone').val(),
-        'email': $('#email').val(),
-        'address': $('#address').val(),
-        'company': $('#company').val(),
-        'occupation': $('#occupation').val(),
-        'relationship': $('#relationship').val(),
-        'photo': $('#photo').val(),
-      }
-
-      $.post('/api/contact', formData, (result) => {
-        console.log(result)
-        let rep = document.querySelector('#reprt');
-        if (result.error) {
-          rep.classList.add('alert-danger');
-          rep.classList.add('alert');
-          rep.textContent = result.error;
-          return;
-        }
-        console.log(result.message)
-        rep.classList.add('alert-success');
-        rep.classList.add('alert');
-        rep.textContent = result.message;
-      })
+      const  formElement = document.querySelector("form");
+      const formData = new FormData(formElement);
+      const request = new XMLHttpRequest();
+      request.open("POST", "/api/contact");
       
+      request.send(formData);
+
+      // $.post('/api/contact', formData, (result) => {
+      //   console.log(result)
+      //   let rep = document.querySelector('#reprt');
+      //   if (result.error) {
+      //     rep.classList.add('alert-danger');
+      //     rep.classList.add('alert');
+      //     rep.textContent = result.error;
+      //     return;
+      //   }
+      //   console.log(result.message)
+      //   rep.classList.add('alert-success');
+      //   rep.classList.add('alert');
+      //   rep.textContent = result.message;
+      // })
+        
     });
   }
 
@@ -517,34 +509,36 @@ const contListTab = `<table class="table">
     
     $('form').submit((e) => {
       e.preventDefault();
-      let formData = {
-        'name': $('#name').val(),
-        'phone': $('#phone').val(),
-        'email': $('#email').val(),
-        'address': $('#address').val(),
-        'company': $('#company').val(),
-        'occupation': $('#occupation').val(),
-        'relationship': $('#relationship').val(),
-        'photo': $('#photo').val(),
-      }
+      const  formElement = document.querySelector("form");
+      const formData = new FormData(formElement);
+      const request = new XMLHttpRequest();
+      request.open('PATCH', `/api/contact/${id}`);
+      
+      request.send(formData);
 
-      $.ajax({
-        type: 'patch',
-        url: `/api/contact/${id}`,
-        data: formData,
-        dataType: 'json'
-      })
-        .done((result) => {
-          let rep = document.querySelector('#reprt');
-          if (result.error) {
-            rep.classList.add('alert-danger');
-            rep.classList.add('alert');
-            rep.textContent = result.error;
-            return;
-          }
-          rep.classList.add('alert-success');
-          rep.classList.add('alert');
-          rep.textContent = result.message;
-        });
+      // $.ajax({
+      //   type: 'patch',
+      //   url: `/api/contact/${id}`,
+      //   data: formData,
+      //   dataType: 'json'
+      // })
+        // .done((result) => {
+        //   let rep = document.querySelector('#reprt');
+        //   if (result.error) {
+        //     rep.classList.add('alert-danger');
+        //     rep.classList.add('alert');
+        //     rep.textContent = result.error;
+        //     return;
+        //   }
+        //   rep.classList.add('alert-success');
+        //   rep.classList.add('alert');
+        //   rep.textContent = result.message;
+        // });
+      // let form = $('form')
+      // let formData = new FormData();
+      // formData.append("username", "Groucho");
+      // formData.append('name', $('#name').val());
+      // formData.append('phone', $('#phone').val());
+      // console.log(form.serialize)
     });
   }

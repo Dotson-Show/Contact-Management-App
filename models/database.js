@@ -44,7 +44,7 @@ const createTables = () => {
         company text,
         occupation text,
         relationship text,
-        photo BINARY,
+        photo text,
         FOREIGN KEY (rel_user_id)
         REFERENCES users (user_id)
             ON UPDATE RESTRICT

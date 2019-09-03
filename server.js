@@ -4,6 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const md5 = require('md5');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 const SQLiteStore = require('connect-sqlite3')(session);
 
 const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
@@ -16,7 +17,7 @@ const {
     SESS_LIFETIME = ONE_WEEK,
 } = process.env
 
-const IN_PROD = NODE_ENV === 'production'
+const IN_PROD = NODE_ENV === 'production';
 
 const app = express();
 
@@ -32,9 +33,10 @@ app.use(session({
         secure: IN_PROD
     }
 }));
+app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(express.static( './views'));
+app.use(express.static( './views'));
 app.use(express.static(path.join(__dirname, '/views/')));
 
 // Authentication
@@ -248,6 +250,17 @@ app.post("/api/contact/", (req, res) => {
         res.json({"error": errors.join(",")});
         return;
     }
+    let imageFile = req.files.photo;
+    let newName = 'uploads/' + Date.now() + '_' + imageFile.name;
+    imageFile.mv('views/'+ newName, (error) => {
+        if (error) {
+            console.log('Problem uploading image');
+            console.log(error.message);
+        } else {
+            console.log('Image uploaded successfully');
+        }
+    })
+
     const data = {
         name: req.body.name,
         phone: req.body.phone,
@@ -256,8 +269,11 @@ app.post("/api/contact/", (req, res) => {
         company: req.body.company,
         occupation: req.body.occupation,
         relationship: req.body.relationship,
-        photo: req.body.photo
+        photo: newName
     }
+    // console.log(imageFile.name + '_' + Date.now() )
+    // console.log(data)
+    
     let sql ='INSERT INTO contacts (rel_user_id, name, phone, email, address, company, occupation, relationship, photo) VALUES (?,?,?,?,?,?,?,?,?)'
     let params =[userId, data.name, data.phone, data.email, data.address, data.company, data.occupation, data.relationship, data.photo]
     db.run(sql, params, function (err, result) {
@@ -276,7 +292,19 @@ app.post("/api/contact/", (req, res) => {
 
 // Update a contact
 app.patch("/api/contact/:id", (req, res) => {
-    let data = {
+    console.log(`request to update contact number ${req.params.id} received`)
+    let imageFile = req.files.photo;
+    let newName = 'uploads/' + Date.now() + '_' + imageFile.name;
+    imageFile.mv('views/'+ newName, (error) => {
+        if (error) {
+            console.log('Problem uploading image');
+            console.log(error.message);
+        } else {
+            console.log('Image uploaded successfully');
+        }
+    })
+
+    const data = {
         name: req.body.name,
         phone: req.body.phone,
         email: req.body.email,
@@ -284,8 +312,9 @@ app.patch("/api/contact/:id", (req, res) => {
         company: req.body.company,
         occupation: req.body.occupation,
         relationship: req.body.relationship,
-        photo: req.body.photo
+        photo: newName
     }
+
     db.run(
         `UPDATE contacts set 
             name = COALESCE(?,name),
