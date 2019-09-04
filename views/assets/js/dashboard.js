@@ -114,17 +114,24 @@ const addContact = () => {
 
 const dFullDetails = (data) => {
   let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = data;
-  let contactPic;
-  photo? contactPic = photo : contactPic = 'http://placehold.it/100x100';
-  
+  let leters = name.split('');
+    
+    let contactPic;
+
+    if (photo) {
+      contactPic =`<img class="media-object" src="${photo}">`;
+    } else {
+      contactPic = `<div id="img-alt" class="imgAlt">${leters[0].toUpperCase()}<p></p></div>`;;
+    } 
+
   return `<table class="table">
   <tr>
     <td class="middle">
       <div class="media">
         <div class="media-left">
-          <a href="#">
-            <img class="media-object" src="${contactPic}" alt="...">
-          </a>
+          <div class="user-photo">
+            ${contactPic}
+          </div>
         </div>
         <div class="media-body">
           
@@ -237,7 +244,9 @@ const dEditContact = (data) => {
       <div class="col-md-4">
         <div class="fileinput fileinput-new" data-provides="fileinput">
           <div class="fileinput-new thumbnail" style="width: 150px; height: 150px;">
-            <img src="${contactPic}" alt="Photo">
+            <div class="user-photo">
+              <img src="${contactPic}" alt="Photo">
+            </div>
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
           <div class="text-center">
@@ -285,17 +294,22 @@ const contListTab = `<table class="table">
   const contact = (result) => {
     let {contact_id, name, phone, email, address, company, occupation, relationship, photo} = result;
     let leters = name.split('');
-    let firstLeter = leters[0]
-    console.log(firstLeter)
+    
     let contactPic;
-    photo? contactPic = photo : contactPic = firstLeter;  
+
+    if (photo) {
+      contactPic =`<img class="media-object" src="${photo}">`;
+    } else {
+      contactPic = `<div id="img-alt" class="imgAlt">${leters[0].toUpperCase()}<p></p></div>`;;
+    } 
+
 
     return `<tr>
             <td class="middle">
               <div class="media">
                 <div class="media-left">
                   <div class="user-photo">
-                      <img class="media-object" src="${contactPic}" alt="...">
+                    ${contactPic}
                   </div>
                 </div>
                   <div class="media-body">
